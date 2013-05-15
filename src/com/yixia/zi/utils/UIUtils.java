@@ -22,7 +22,9 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.StatFs;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.Formatter;
 import android.util.TypedValue;
 
 /**
@@ -30,15 +32,19 @@ import android.util.TypedValue;
  * @author crossle
  */
 public class UIUtils {
-	
+
 	private static final String IMAGE_FETCHER = "imageFetcher";
-	
+
 	public static boolean hasFroyo() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
 	}
 
 	public static boolean hasGingerbread() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+	}
+
+	public static boolean hasGingerbreadMR1() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1;
 	}
 
 	public static boolean hasHoneycomb() {
@@ -69,6 +75,10 @@ public class UIUtils {
 		return hasHoneycomb() && isTablet(context);
 	}
 
+	public static boolean isGingerbread() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1;
+	}
+
 	public static boolean isNetworkAvailable(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -85,7 +95,6 @@ public class UIUtils {
 		return fetcher;
 	}
 
-
 	/**
 	 * Set the theme of the Activity, and restart it by creating a new Activity of
 	 * the same type.
@@ -99,5 +108,12 @@ public class UIUtils {
 		TypedValue typedValue = new TypedValue();
 		activity.getTheme().resolveAttribute(attrId, typedValue, true);
 		return typedValue;
+	}
+
+	public static String getAvailaleSize(Context context, String path) {
+		StatFs stat = new StatFs(path);
+		long blockSize = stat.getBlockSize();
+		long availableBlocks = stat.getAvailableBlocks();
+		return Formatter.formatFileSize(context, (availableBlocks * blockSize));
 	}
 }
