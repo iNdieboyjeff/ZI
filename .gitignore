@@ -8,6 +8,10 @@
 # Java class files
 *.class
 
+# Gradle config
+.gradle
+build
+
 # generated files
 bin/
 gen/
@@ -18,3 +22,6 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+
+# IntelliJ IDEA files
+*.iml
